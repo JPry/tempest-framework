@@ -39,7 +39,7 @@ final class ShowAircraftControllerTest extends IntegrationTest
 The [`PreCondition`](https://docs.phpunit.de/en/12.5/attributes.html#precondition) attribute instructs PHPUnit to run the associated method after the `setUp()` method. We recommend using it instead of overriding `setUp()` directly.
 :::
 
-### Runnig migrations
+### Running migrations
 
 By default, all migrations are run when setting up the database. However, you may choose to run only specific migrations by using the `migrate()` method instead of `setup()`.
 
@@ -107,7 +107,7 @@ Non-test files created in the `tests` directory are automatically discovered by 
 You can override this behavior by providing your own implementation of `discoverTestLocations()`:
 
 ```php tests/Aircraft/ShowAircraftControllerTest.php
-use Tempest\Core\DiscoveryLocation;
+use Tempest\Discovery\DiscoveryLocation;
 use Tempest\Framework\Testing\IntegrationTest;
 
 final class ShowAircraftControllerTest extends IntegrationTest

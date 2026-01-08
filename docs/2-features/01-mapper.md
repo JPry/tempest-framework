@@ -125,6 +125,8 @@ Accessing missing properties after the object has been constructed results in an
 ```php
 use Tempest\Mapper\Strict;
 
+use function Tempest\Mapper\map;
+
 #[Strict]
 final class Book
 {
@@ -132,7 +134,7 @@ final class Book
     public string $contents;
 }
 
-// MissingValuesException is thrown
+// MappingValuesWereMissing is thrown
 $book = map(['title' => 'Timeline Taxi'])->to(Book::class);
 ```
 
@@ -188,6 +190,7 @@ final readonly class AddressCaster implements Caster
 ```
 
 ```php app/AddressSerializer.php
+use Tempest\Mapper\Exceptions\ValueCouldNotBeSerialized;
 use Tempest\Mapper\Serializer;
 
 final readonly class AddressSerializer implements Serializer
@@ -195,7 +198,7 @@ final readonly class AddressSerializer implements Serializer
     public function serialize(mixed $input): array|string
     {
         if (! $input instanceof Address) {
-            throw new CannotSerializeValue(Address::class);
+            throw new ValueCouldNotBeSerialized(Address::class);
         }
 
         return $input->toArray();
@@ -229,7 +232,7 @@ final readonly class AddressSerializer implements Serializer, DynamicSerializer
     public function serialize(mixed $input): array|string
     {
         if (! $input instanceof Address) {
-            throw new CannotSerializeValue(Address::class);
+            throw new ValueCouldNotBeSerialized(Address::class);
         }
 
         return $input->toArray();
@@ -308,7 +311,7 @@ This serializer is only used when mapping with `->in(SerializationContext::API)`
 To adapt behavior dynamically, inject the current context into the caster or serializer constructor by naming its property `$context`. Other dependencies from the container can also be injected.
 
 ```php
-use Tempest\Mapper\Context;
+use Tempest\Mapper\Attributes\Context;
 use Tempest\Mapper\Serializer;
 
 #[Context(DatabaseContext::class)]

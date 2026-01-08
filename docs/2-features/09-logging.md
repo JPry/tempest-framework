@@ -11,7 +11,7 @@ The system supports file logging, Slack integration, system logs, and custom cha
 
 ## Writing logs
 
-To start logging messsages, you may inject the {b`Tempest\Log\Logger`} interface in any class. By default, log messages will be written to a daily rotating log file stored in `.tempest/logs`. This may be customized by providing a different [logging configuration](#configuration).
+To start logging messages, you may inject the {b`Tempest\Log\Logger`} interface in any class. By default, log messages will be written to a daily rotating log file stored in `.tempest/logs`. This may be customized by providing a different [logging configuration](#configuration).
 
 ```php app/Services/UserService.php
 use Tempest\Log\Logger;
@@ -91,6 +91,7 @@ return new MultipleChannelsLogConfig(
             minimumLogLevel: LogLevel::CRITICAL,
         ),
     ],
+    prefix: null,
 );
 ```
 
@@ -101,7 +102,7 @@ In situations where you would like to log different types of information to diff
 For instance, you could have a logger dedicated to critical alerts, while each of your application's module have its own logger:
 
 ```php src/Monitoring/logging.config.php
-use Tempest\Log\Config\DailyLogConfig;
+use Tempest\Log\Config\SlackLogConfig;
 use Modules\Monitoring\Logging;
 use Tempest;
 
@@ -149,11 +150,11 @@ final readonly class ProcessOrder
 
 Tempest provides a few log channels that correspond to common logging needs:
 
-- {b`Tempest\Log\Channel\AppendLogChannel`} — append all messages to a single file without rotation,
-- {b`Tempest\Log\Channel\DailyLogChannel`} — create a new file each day and remove old files automatically,
-- {b`Tempest\Log\Channel\WeeklyLogChannel`} — create a new file each week and remove old files automatically,
-- {b`Tempest\Log\Channel\SlackLogChannel`} — send messages to a Slack channel via webhook,
-- {b`Tempest\Log\Channel\SysLogChannel`} — write messages to the system log.
+- {b`Tempest\Log\Channels\AppendLogChannel`} — append all messages to a single file without rotation,
+- {b`Tempest\Log\Channels\DailyLogChannel`} — create a new file each day and remove old files automatically,
+- {b`Tempest\Log\Channels\WeeklyLogChannel`} — create a new file each week and remove old files automatically,
+- {b`Tempest\Log\Channels\SlackLogChannel`} — send messages to a Slack channel via webhook,
+- {b`Tempest\Log\Channels\SysLogChannel`} — write messages to the system log.
 
 As a convenient abstraction, a configuration class for each channel is provided:
 

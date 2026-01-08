@@ -160,11 +160,13 @@ Beyond selecting models, any query builder can be used with model objects:
 
 ```php
 use App\Models\Book;
-use function Tempest\Database\query;
+use Tempest\Database\PrimaryKey;
+
+;use function Tempest\Database\query;
 
 final class BookRepository
 {
-    public function create(Book $book): Id
+    public function create(Book $book): PrimaryKey
     {
         return query(Book::class)
             ->insert($book)
@@ -215,11 +217,11 @@ final class Book
     public ?Author $author = null;
 
     /** @var \App\Chapter[] */
-    #[HasMany(relationJoin: 'chapters.uuid', ownerJoin: 'books.chapter_uuid')]
+    #[HasMany(ownerJoin: 'chapters.book_uuid', relationJoin: 'books.uuid')]
     public array $chapters = [];
 
-    #[HasOne(relationJoin: 'books.uuid', ownerJoin: 'isbns.book_uuid')]
-    public Isbn $isbn = [];
+    #[HasOne(ownerJoin: 'isbns.book_uuid', relationJoin: 'books.uuid')]
+    public ?Isbn $isbn = null;
 }
 ```
 
@@ -240,11 +242,11 @@ final class Book
     public ?Author $author = null;
 
     /** @var \App\Chapter[] */
-    #[HasMany(relationJoin: 'uuid', ownerJoin: 'chapter_uuid')]
+    #[HasMany(ownerJoin: 'chapter_uuid', relationJoin: 'uuid')]
     public array $chapters = [];
 
-    #[HasOne(relationJoin: 'uuid', ownerJoin: 'book_uuid')]
-    public Isbn $isbn = [];
+    #[HasOne(ownerJoin: 'book_uuid', relationJoin: 'uuid')]
+    public ?Isbn $isbn = null;
 }
 ```
 
@@ -415,7 +417,7 @@ final class User
     // ...
 
     #[Encrypted]
-    public ?string $accessToken,
+    public ?string $accessToken;
 }
 ```
 
@@ -440,7 +442,7 @@ final class Book
 
     #[Virtual]
     public DateTime $saleExpiresAt {
-        get => $this->publishedAt->add(Duration::days(5)));
+        get => $this->publishedAt->add(Duration::days(5));
     }
 }
 ```
@@ -501,7 +503,7 @@ Tempest uses migrations to create and update databases across different environm
 
 ### Writing migrations
 
-Classes implementing the {b`Tempest\Database\DatabaseMigration`} interface and `.sql` files are automatically [discovered](../1-essentials/05-discovery) and registered as migrations. These files can be stored anywhere in the application.
+Classes implementing the {b`Tempest\Database\MigratesUp`} or {b`Tempest\Database\MigratesDown`} interface and `.sql` files are automatically [discovered](../1-essentials/05-discovery) and registered as migrations. These files can be stored anywhere in the application.
 
 :::code-group
 
@@ -893,7 +895,7 @@ final class ConnectTenantMiddleware implements HttpMiddleware
     {
         $tenantId = // Tenant ID resolution from request
 
-        (new ConnectTennant)($tenantId);
+        (new ConnectTenant)($tenantId);
 
         return $next($request);
     }

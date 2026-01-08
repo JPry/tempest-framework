@@ -79,7 +79,7 @@ While Tempest provides a variety of [built-in discovery classes](#built-in-disco
 
 Tempest discovers classes that implement {b`Tempest\Discovery\Discovery`}, which requires implementing the `discover()` and `apply()` methods. The {b`Tempest\Discovery\IsDiscovery`} trait provides the rest of the implementation.
 
-The `discover()` method accepts a {b`Tempest\Core\DiscoveryLocation`} and a {b`Tempest\Reflection\ClassReflector`} parameter. The reflector can be used to loop through a class' attributes, methods, parameters or anything else. If the class matches your expectations, you may register it using `$this->discoveryItems->add()`.
+The `discover()` method accepts a {b`Tempest\Discovery\DiscoveryLocation`} and a {b`Tempest\Reflection\ClassReflector`} parameter. The reflector can be used to loop through a class' attributes, methods, parameters or anything else. If the class matches your expectations, you may register it using `$this->discoveryItems->add()`.
 
 As an example, the following is a simplified version of the event bus discovery:
 
@@ -87,7 +87,7 @@ As an example, the following is a simplified version of the event bus discovery:
 use Tempest\Discovery\Discovery;
 use Tempest\Discovery\IsDiscovery;
 
-final readonly class EventBusDiscovery implements Discovery
+final class EventBusDiscovery implements Discovery
 {
     // This provides the default implementation for `Discovery`'s internals
     use IsDiscovery;
@@ -134,7 +134,7 @@ final readonly class EventBusDiscovery implements Discovery
 
 It is possible to discover files instead of classes. For instance, view files, front-end entrypoints or SQL migrations are not PHP classes, but still need to be discovered.
 
-In this case, you may implement the additional {b`\Tempest\Discovery\DiscoversPath`} interface. It requires a `discoverPath()` method that accepts a {b`Tempest\Core\DiscoveryLocation`} and a string path.
+In this case, you may implement the additional {b`\Tempest\Discovery\DiscoversPath`} interface. It requires a `discoverPath()` method that accepts a {b`Tempest\Discovery\DiscoveryLocation`} and a string path.
 
 The example below shows a simplified version of the Vite entrypoint discovery:
 
@@ -162,7 +162,7 @@ final class ViteDiscovery implements Discovery, DiscoversPath
     // We can use the `$path` to determine whether we are interested in it.
     public function discoverPath(DiscoveryLocation $location, string $path): void
     {
-        // We are insterested in `.ts`, `.css` and `.js` files only.
+        // We are interested in `.ts`, `.css` and `.js` files only.
         if (! Str\ends_with($path, ['.ts', '.css', '.js'])) {
             return;
         }
@@ -209,7 +209,7 @@ Most of Tempest's features are built on top of discovery. The following is a non
 - {b`Tempest\Console\Discovery\ScheduleDiscovery`} discovers methods with the {b`#[Tempest\Console\Schedule]`} attribute and registers them as [scheduled tasks](../2-features/11-scheduling.md).
 - {b`Tempest\Container\InitializerDiscovery`} discovers classes that implement {b`\Tempest\Container\Initializer`} or {b`\Tempest\Container\DynamicInitializer`} and registers them as [dependency initializers](./05-container.md#dependency-initializers).
 - {b`Tempest\Database\MigrationDiscovery`} discovers classes that implement {b`Tempest\Database\MigratesUp`} or {b`Tempest\Database\MigratesDown`} and registers them as [migrations](./03-database.md#migrations).
-- {b`Tempest\EventBusDiscovery\EventBusDiscovery`} discovers methods with the {b`#[Tempest\EventBus\EventHandler]`} attribute and registers them in the [event bus](../2-features/08-events.md).
+- {b`Tempest\EventBus\EventBusDiscovery`} discovers methods with the {b`#[Tempest\EventBus\EventHandler]`} attribute and registers them in the [event bus](../2-features/08-events.md).
 - {b`Tempest\Router\RouteDiscovery`} discovers route attributes on methods and registers them as [controller actions](./01-routing.md) in the router.
 - {b`Tempest\Mapper\MapperDiscovery`} discovers classes that implement {b`Tempest\Mapper\Mapper`} and registers them for [mapping](../2-features/01-mapper.md#mapper-discovery).
 - {b`Tempest\Mapper\CasterDiscovery`} discovers classes that implement {b`Tempest\Mapper\DynamicCaster`} and registers them as [casters](../2-features/01-mapper.md#casters-and-serializers).

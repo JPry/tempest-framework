@@ -707,7 +707,7 @@ Tempest provides several response classes for common use cases, all implementing
 - {b`Tempest\Http\Responses\NotFound`} — the 404 response. Accepts an optional body.
 - {b`Tempest\Http\Responses\ServerError`} — a 500 server error response.
 
-The following example conditionnally returns a {b`Tempest\Http\Responses\Redirect`}, otherwise letting the user download a file by sending a {b`Tempest\Http\Responses\Download`} response:
+The following example conditionally returns a {b`Tempest\Http\Responses\Redirect`}, otherwise letting the user download a file by sending a {b`Tempest\Http\Responses\Download`} response:
 
 ```php app/FlightPlanController.php
 use Tempest\Router\Get;
@@ -786,11 +786,11 @@ final class AircraftRegistered implements Response
 
 Tempest automatically infers the response's content type, typically from the request's `{txt}Accept` header.
 
-However, the content type can be overridden manually by using the `setContentType` method on {b`Tempest\Http\Response`} classes. This method accepts a case of {b`Tempest\Router\ContentType`}.
+However, the content type can be overridden manually by using the `setContentType` method on {b`Tempest\Http\Response`} classes. This method accepts a case of {b`Tempest\Http\ContentType`}.
 
 ```php app/JsonController.php
 use Tempest\Router\Get;
-use Tempest\Router\ContentType;
+use Tempest\Http\ContentType;
 use Tempest\Http\Response;
 use Tempest\Http\Responses\Ok;
 
@@ -810,7 +810,7 @@ final readonly class JsonController
 
 There are situations where actions need to be taken on a response right before it is sent to the client. For instance, custom error pages can be displayed when an exception occurred, or a redirect can be performed instead of displaying the [built-in HTTP 404](/hello-from-the-void){:ssg-ignore="true"} page.
 
-This can be done using a response processor. Similar to [view processors](./02-views.md#pre-processing-views), these are classes that implement the {b`Tempest\Response\ResponseProcessor`} interface. In the `process()` method, the response object can be mutated and returned:
+This can be done using a response processor. Similar to [view processors](./02-views.md#pre-processing-views), these are classes that implement the {b`Tempest\Router\ResponseProcessor`} interface. In the `process()` method, the response object can be mutated and returned:
 
 ```php app/ErrorResponseProcessor.php
 use function Tempest\view;
@@ -841,7 +841,7 @@ final readonly class TodoController
         private Session $session,
     ) {}
 
-    #[Post('/select/{todo}']
+    #[Post('/select/{todo}')]
     public function select(Todo $todo): View
     {
         if ($this->session->get('selected_todo') === $todo->id) {

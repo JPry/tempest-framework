@@ -73,7 +73,7 @@ return view('views/home.view.php');
 
 A view object is a dedicated class that represent a specific view.
 
-Using view objects will improve static insights in your controllers and view files, and may offer more flexibiltiy regarding how the data may be constructed before being passed on to a view file.
+Using view objects will improve static insights in your controllers and view files, and may offer more flexibility regarding how the data may be constructed before being passed on to a view file.
 
 ```php
 final class AircraftController
@@ -91,6 +91,8 @@ To create a view object, implement the {`Tempest\View\View`} interface, and add 
 ```php app/AircraftView.php
 use Tempest\View\View;
 use Tempest\View\IsView;
+
+use function Tempest\root_path;
 
 final class AircraftView implements View
 {
@@ -375,7 +377,7 @@ When a single slot is not enough, names can be attached to them. When using a co
 </html>
 ```
 
-The above example uses a slot named `styles` in its `<head>` element. The `<body>` element has a default, unnamed slot. A view component may use `<x-base>` and optionally refer to the `styles` slot using the syntax mentionned above, or simply provide content that will be injected in the default slot:
+The above example uses a slot named `styles` in its `<head>` element. The `<body>` element has a default, unnamed slot. A view component may use `<x-base>` and optionally refer to the `styles` slot using the syntax mentioned above, or simply provide content that will be injected in the default slot:
 
 ```html index.view.php
 <x-base title="Hello World">
@@ -672,14 +674,14 @@ You can choose whichever way you prefer. Chances are that, if you use the minima
 
 ### A note on caching
 
-When you're using the minimal setup, view caching can be enabled by passing in a `$viewCache` paremeter into `TempestViewRenderer::make()`:
+When you're using the minimal setup, view caching can be enabled by passing in a `$viewCache` parameter into `TempestViewRenderer::make()`:
 
 ```php
 use Tempest\View\Renderers\TempestViewRenderer;
 use Tempest\View\ViewCache;
 
 $renderer = TempestViewRenderer::make(
-    cache: ViewCache::create(),
+    viewCache: ViewCache::create(),
 );
 ```
 
@@ -693,7 +695,7 @@ $viewCache = ViewCache::create();
 $viewCache->clear();
 
 $renderer = TempestViewRenderer::make(
-    cache: $viewCache,
+    viewCache: $viewCache,
 );
 ```
 
@@ -823,21 +825,27 @@ use Tempest\Container\Container;
 use Tempest\Container\DynamicInitializer;
 use Tempest\Container\Singleton;
 use Tempest\Reflection\ClassReflector;
+use UnitEnum;
 
 final readonly class BladeInitializer implements DynamicInitializer
 {
-    public function canInitialize(ClassReflector $class): bool
+    public function canInitialize(ClassReflector $class, null|string|UnitEnum $tag): bool
     {
+        if (! class_exists(Blade::class)) {
+            return false;
+        }
+
         return $class->getName() === Blade::class;
     }
 
     #[Singleton]
-    public function initialize(ClassReflector $class, Container $container): object
+    public function initialize(ClassReflector $class, null|string|UnitEnum $tag, Container $container): object
     {
         $bladeConfig = $container->get(BladeConfig::class);
 
         return new Blade(
             viewPaths: $bladeConfig->viewPaths,
+            cachePath: Tempest\internal_storage_path($bladeConfig->cachePath ?? 'cache/blade'),
         );
     }
 }

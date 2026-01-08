@@ -41,8 +41,6 @@ final class UserEventHandlers
                 user: $userCreated->user,
             ),
         ));
-
-        $this->success('Done');
     }
 }
 ```
@@ -63,8 +61,6 @@ final class UserEventHandlers
     public function onCreated(UserCreated $userCreated): void
     {
         $this->mailer->send(new WelcomeEmail($userCreated->user));
-
-        $this->success('Done');
     }
 }
 ```
@@ -145,7 +141,9 @@ final class WelcomeEmail implements Email, HasTextContent
 {
     // …
     
-    public string|View|null $text = view('welcome-text.view.php', user: $this->user);
+    public string|View|null $text {
+        get => view('welcome-text.view.php', user: $this->user);
+    }
 }
 ```
 
