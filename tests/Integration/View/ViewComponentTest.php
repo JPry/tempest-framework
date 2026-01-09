@@ -891,7 +891,7 @@ final class ViewComponentTest extends FrameworkIntegrationTestCase
         $this->view->registerViewComponent('x-a', '<a><x-slot /></a>');
         $this->view->registerViewComponent('x-b', <<<'HTML'
         <?php 
-        use function \Tempest\get;
+        use function \Tempest\Container\get;
         use \Tempest\Core\Environment;
         ?>
         {{ get(Environment::class)->value }}
