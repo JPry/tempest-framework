@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+PACKAGE_NAME=$1
+SUBSPLIT_DIR="${PACKAGE_NAME}_subsplit"
+
+# Clone our Tempest repository and jump into it.
+git clone https://github.com/tempestphp/tempest-framework "$SUBSPLIT_DIR"
+cd "$SUBSPLIT_DIR"
+
+# Get the current default branch of the Tempest repo.
+DEFAULT_BRANCH=$(git branch --show-current)
+
+# Filter the history down to only the one package.
+git filter-repo --subdirectory-filter "packages/${PACKAGE_NAME}"
+
+# Setup our remote repository we are splitting to.
+git remote add origin "https://x-access-token:${SUBSPLIT_TOKEN}@github.com/tempestphp/tempest-${PACKAGE_NAME}.git"
+git branch -m "$DEFAULT_BRANCH"
+
+# Push all branches + history to the repo.
+git push --force --all origin
+
+# Push all releases / tags to the repo.
+git push --force --tags origin
+
+# Cleanup
+cd ../
+rm -rf "${SUBSPLIT_DIR}"
