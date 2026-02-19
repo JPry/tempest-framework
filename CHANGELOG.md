@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [3.2.0](https://github.com/tempestphp/tempest-framework/compare/v3.1.0..3.2.0)  —  2026-02-19
+## [3.2.1](https://github.com/tempestphp/tempest-framework/compare/v3.2.0..3.2.1)  —  2026-02-19
+
+### 🐛 Bug fixes
+
+- **cache**: clear the default cache by name (#1993) ([0c316aa](https://github.com/tempestphp/tempest-framework/commit/0c316aaecc9b9fdab706b8e86944e14122b32e35))
+- **ci**: run benchmark when PR goes to base branch (#1992) ([64bb215](https://github.com/tempestphp/tempest-framework/commit/64bb2156f5846332f5ce40f2c6210cb5109b057c))
+
+
+## [3.2.0](https://github.com/tempestphp/tempest-framework/compare/v3.1.0..v3.2.0)  —  2026-02-19
 
 ### 🚨 Breaking changes
 
