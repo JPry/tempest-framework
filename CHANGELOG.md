@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.0](https://github.com/tempestphp/tempest-framework/compare/v3.1.0..3.2.0)  —  2026-02-19
+
+### 🚨 Breaking changes
+
+- **view**: [**breaking**] improved view component rendering (#1980) ([b830a16](https://github.com/tempestphp/tempest-framework/commit/b830a1601c5d8d3ecd2502e3b49be2e8f6078500))
+
+
 ## [3.0.2](https://github.com/tempestphp/tempest-framework/compare/v3.0.1..v3.0.2)  —  2026-02-16
 
 ### 🚨 Breaking changes
